@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PPD Early Warning System</title><link rel="stylesheet" href="/app/style.css">
+</head>
+<body>
+  <header class="site-header"><a class="brand" href="/"><span>✦</span> Nurture<span>Sense</span></a><p>Postpartum wellbeing support</p></header>
+  <main>
+    <section class="hero">
+      <div><p class="eyebrow">YOUR PRIVATE WELLBEING SPACE</p><h1>A gentler way to<br>check in with yourself.</h1><p>Take a moment to reflect on the past week. Your answers create an early-warning summary you can use to start a supportive conversation.</p></div>
+      <div class="hero-orb"><span>♡</span><small>7-day<br>check-in</small></div>
+    </section>
+    <div class="notice"><span>🔒</span><p>Recent check-in summaries are kept in this browser to calculate your trend. This is screening support, not a clinical diagnosis.</p></div>
+    <label class="mode-switch"><input id="production-mode" type="checkbox"><span></span><div><b>Production schedule</b><small>Enable to show EPDS questions only every seven days. Leave off for Demo mode, where questions are always available.</small></div></label>
+    <form id="assessment-form">
+      <section class="doctor-card"><div class="section-number">00</div><div><p class="section-kicker">SAFETY CONTACT</p><h2>Doctor email for critical alerts</h2><p>Required for every assessment. If this screening returns Critical, a minimal alert will be sent to this doctor. The private journal text is not emailed.</p><label for="doctor-email">Doctor or clinic email</label><input id="doctor-email" type="email" required autocomplete="email" placeholder="doctor@clinic.com"><label class="consent-check"><input id="doctor-consent" type="checkbox" required> I confirm this doctor is the appropriate recipient and consent to a critical-risk screening alert being emailed.</label></div></section>
+      <section class="journal-card"><div class="section-number">01</div><div><p class="section-kicker">TODAY</p><h2>How has today felt?</h2><label for="journal">Write freely—or use your voice. There is no right way to say it.</label><textarea id="journal" required minlength="1" placeholder="For example: I've been feeling overwhelmed and haven't been sleeping well."></textarea><div class="voice-row"><button class="voice-button" id="voice-journal" type="button" aria-pressed="false"><span aria-hidden="true">🎙</span> Start voice journal</button><span id="voice-status" role="status">You can speak instead of typing.</span></div><p class="voice-note">Voice transcription depends on your browser and requires microphone permission. Review the text before submitting.</p></div></section>
+      <section class="assessment-card" id="weekly-assessment" hidden><div class="assessment-heading"><div><div class="section-number">02</div><p class="section-kicker">WEEKLY CHECK-IN</p><h2>Your EPDS questions are due today</h2><p>These 10 questions are shown once every seven days. Your answers will be combined with your recent daily journal check-ins.</p></div><div class="question-counter"><strong>10</strong><span>weekly questions</span></div></div><div id="epds"></div></section>
+      <section class="schedule-card" id="schedule-card"><span class="schedule-icon">◷</span><div><p class="section-kicker">DAILY JOURNAL</p><h2 id="schedule-title">Your daily check-in is ready</h2><p id="schedule-message">Write or speak a journal entry whenever you need. Your report will use your journal and recent check-ins.</p></div></section>
+      <div class="action-buttons"><button type="button" id="daily-submit" class="submit-button"><span>Create journal-only summary</span><b>→</b></button><button type="submit" id="weekly-submit" class="submit-button weekly-submit" hidden><span>Create combined EPDS summary</span><b>→</b></button></div>
+    </form>
+    <section id="result" hidden aria-live="polite"></section>
+    <p class="crisis-note">If you may hurt yourself or feel in immediate danger, contact local emergency services or a crisis service now and do not stay alone.</p>
+  </main><script src="/app/app.js"></script>
+</body></html>

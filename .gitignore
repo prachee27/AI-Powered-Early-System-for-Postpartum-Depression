@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual Environment
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# VS Code
+.vscode/
+
+# Environment Variables
+.env
+
+# Trained models (optional)
+trained_model/
+*.pt
+*.pth
+*.bin
+
+# Local screening history; do not commit patient-identifiable data.
+data/*.db

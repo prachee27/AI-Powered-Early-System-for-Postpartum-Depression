@@ -1,0 +1,17 @@
+# Runtime dependencies for the FastAPI backend.
+# The former file was a machine-specific Jupyter environment export and pinned
+# packages that do not support Python 3.14 on macOS (for example spaCy 3.8).
+fastapi>=0.115,<1.0
+uvicorn[standard]>=0.30,<1.0
+pydantic>=2.0,<3.0
+torch>=2.2
+transformers>=4.40,<6.0
+
+# Development tests
+pytest>=8.0
+python-dotenv>=1.0,<2.0
+certifi>=2024.0.0
+
+# Optional: required only to train a model with scripts/train_postpartum_depression_model.py
+datasets>=2.18
+accelerate>=0.28

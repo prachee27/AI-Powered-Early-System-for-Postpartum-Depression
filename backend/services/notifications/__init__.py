@@ -1,0 +1,1 @@
+"""Critical-risk notification services."""
