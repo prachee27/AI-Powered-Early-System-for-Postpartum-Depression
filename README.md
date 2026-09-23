@@ -1,66 +1,107 @@
 # Postpartum Depression Early-Warning System
 
-This backend is an early-warning prototype. It is not a clinical diagnosis or
-an emergency service.
+This project is an early-warning system that helps track possible signs of postpartum depression using daily journal entries and weekly EPDS assessments.
 
-## Assessment cadence
+> This is only a prototype and screening tool. It is not a medical diagnosis or emergency service.
 
-- A user submits a daily journal or voice-to-text journal to
-  `POST /daily-check-in`. This endpoint does **not** ask EPDS questions.
-- The ten EPDS questions appear only in the weekly `POST /analyze` check-in.
-- After a successful weekly request, the system stores the completion
-  date for that `patient_id` in `data/assessments.db` and returns
-  `next_epds_assessment_due`.
-- A second submission before that date is rejected with HTTP 422. A new
-  submission is accepted on the due date or later.
+## How It Works
 
-For a daily check-in, send up to six previous daily summaries in `history`.
-When the current entry makes seven days in total, the system calculates the
-weekly trend. This does not mean that the EPDS questionnaire is filled seven
-times.
+Users can submit a journal entry every day using:
 
-Example fields required by `POST /analyze`:
+```text
+POST /daily-check-in
+```
+
+The journal can be typed or entered using voice-to-text. The system analyzes the text and looks for emotional signals such as stress, anxiety, sadness, sleep problems, or negative thoughts.
+
+The app also keeps the previous six daily summaries so it can compare patterns over a seven-day period.
+
+The EPDS questionnaire is **not asked every day**.
+
+## Weekly EPDS Assessment
+
+The 10 EPDS questions are shown during the first assessment and then once every seven days.
+
+The weekly assessment is submitted through:
+
+```text
+POST /analyze
+```
+
+After completing it, the system saves the assessment date and returns:
+
+```text
+next_epds_assessment_due
+```
+
+If the user tries to submit another EPDS assessment before the due date, the server returns an HTTP `422` error.
+
+## Example Request
 
 ```json
 {
   "patient_id": "patient-123",
   "assessment_date": "2026-08-21",
   "journal": "I have been feeling anxious and cannot sleep.",
-  "epds_answers": {"1": 0, "2": 0, "3": 3, "4": 0, "5": 3, "6": 3, "7": 3, "8": 3, "9": 3, "10": 3},
+  "epds_answers": {
+    "1": 0,
+    "2": 0,
+    "3": 3,
+    "4": 0,
+    "5": 3,
+    "6": 3,
+    "7": 3,
+    "8": 3,
+    "9": 3,
+    "10": 3
+  },
   "history": []
 }
 ```
 
-`history` must contain exactly seven daily summaries in an actual API request.
-Keep the generated `data/assessments.db` private: it can contain health-related
-screening history and is intentionally excluded from version control.
+For the actual `/analyze` request, `history` should contain exactly seven daily summaries.
 
-## Web-app flow
+## Text Analysis Model
 
-- A journal entry may be submitted every day, by typing or voice-to-text.
-- The app stores only the six most recent daily summary signals in the current
-  browser so that the next report can compare today with the prior week.
-- The 10 EPDS questions appear on the first check-in and then only when the
-  next seven-day due date is reached. A daily journal still receives a report
-  when the EPDS questionnaire is not due or is declined.
+The project works by default using a simple keyword-based screening system.
 
-## Depression text model
+If a trained transformer model is added inside:
 
-The application runs immediately with a transparent keyword-based screening
-fallback. It automatically switches to a trained local transformer when its
-files are placed in `trained_model/depression_model/`.
+```text
+trained_model/depression_model/
+```
 
-The repository does not include a clinical postpartum-depression model or
-patient data. The included Dreaddit dataset is labelled for stress, so it must
-not be repurposed as a postpartum-depression model. To train a model ethically,
-use a reviewed, consented postpartum-depression-labelled CSV with `text` and
-`label` columns (`0` = not depressed, `1` = depression risk):
+the application automatically starts using it after the server is restarted.
+
+The included Dreaddit dataset is meant for stress detection, so it should not be treated as a postpartum-depression dataset.
+
+To train a custom model, use a reviewed dataset with:
+
+```text
+text
+label
+```
+
+where:
+
+```text
+0 = no depression risk
+1 = possible depression risk
+```
+
+Run:
 
 ```bash
 pip install -r requirements.txt
 python scripts/train_postpartum_depression_model.py --data path/to/postpartum_labelled_data.csv
 ```
 
-The saved model will be used automatically after restarting the server. It is
-still a screening aid rather than a diagnostic tool and requires clinical
-validation before real-world medical use.
+## Privacy
+
+Assessment history is stored in:
+
+```text
+data/assessments.db
+```
+
+This file may contain sensitive health-related information, so it should remain private and should never be uploaded to a public repository.
